@@ -1,0 +1,347 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "workflows_taskscheduler_name": {
+            "defaultValue": "taskscheduler",
+            "type": "String"
+        },
+        "connections_sendgrid_1_externalid": {
+            "defaultValue": "/subscriptions/da5bd43b-dce9-4c02-b9a5-7423c2b90e63/resourceGroups/serverlessdreidel/providers/Microsoft.Web/connections/sendgrid-1",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Logic/workflows",
+            "apiVersion": "2017-07-01",
+            "name": "[parameters('workflows_taskscheduler_name')]",
+            "location": "northeurope",
+            "properties": {
+                "state": "Enabled",
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "$connections": {
+                            "defaultValue": {},
+                            "type": "Object"
+                        }
+                    },
+                    "triggers": {
+                        "Recurrence": {
+                            "recurrence": {
+                                "frequency": "Month",
+                                "interval": 12,
+                                "startTime": "2019-12-13T08:00:00",
+                                "timeZone": "W. Central Africa Standard Time"
+                            },
+                            "type": "Recurrence"
+                        }
+                    },
+                    "actions": {
+                        "Delay_until_0825": {
+                            "runAfter": {
+                                "Send_email_1_-_start": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Wait",
+                            "inputs": {
+                                "interval": {
+                                    "count": 25,
+                                    "unit": "Minute"
+                                }
+                            }
+                        },
+                        "Delay_until_0830": {
+                            "runAfter": {
+                                "Send_email_2_-_pour_two_cups": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Wait",
+                            "inputs": {
+                                "interval": {
+                                    "count": 5,
+                                    "unit": "Minute"
+                                }
+                            }
+                        },
+                        "Delay_until_0835": {
+                            "runAfter": {
+                                "Send_email_3_-_light_candles": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Wait",
+                            "inputs": {
+                                "interval": {
+                                    "count": 5,
+                                    "unit": "Minute"
+                                }
+                            }
+                        },
+                        "Delay_until_0839": {
+                            "runAfter": {
+                                "Send_email_4_-_deliver_to_mum_and_dad": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Wait",
+                            "inputs": {
+                                "interval": {
+                                    "count": 4,
+                                    "unit": "Minute"
+                                }
+                            }
+                        },
+                        "Delay_until_0840": {
+                            "runAfter": {
+                                "Send_email_5_-_two_more_cups": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Wait",
+                            "inputs": {
+                                "interval": {
+                                    "count": 1,
+                                    "unit": "Minute"
+                                }
+                            }
+                        },
+                        "Delay_until_0845": {
+                            "runAfter": {
+                                "Send_email_6_-_relight": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Wait",
+                            "inputs": {
+                                "interval": {
+                                    "count": 5,
+                                    "unit": "Minute"
+                                }
+                            }
+                        },
+                        "Delay_until_0849": {
+                            "runAfter": {
+                                "Send_email_7_-_sister_and_brother": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Wait",
+                            "inputs": {
+                                "interval": {
+                                    "count": 4,
+                                    "unit": "Minute"
+                                }
+                            }
+                        },
+                        "Send_email_1_-_start": {
+                            "runAfter": {},
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "body": {
+                                    "from": "fromemail@test.com",
+                                    "ishtml": true,
+                                    "subject": "Start the coffee",
+                                    "text": "<p>Hi Lucy, start preparing coffee, set out 4 cups</p>",
+                                    "to": "lucyemail@test.com"
+                                },
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['sendgrid_1']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/v3/mail/send"
+                            }
+                        },
+                        "Send_email_2_-_pour_two_cups": {
+                            "runAfter": {
+                                "Delay_until_0825": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "body": {
+                                    "from": "fromemail@test.com",
+                                    "ishtml": true,
+                                    "subject": "Pour two cups",
+                                    "text": "<p>Hello Lucy, pour two cups</p>",
+                                    "to": "lucyemail@test.com"
+                                },
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['sendgrid_1']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/v3/mail/send"
+                            }
+                        },
+                        "Send_email_3_-_light_candles": {
+                            "runAfter": {
+                                "Delay_until_0830": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "body": {
+                                    "from": "fromemail@test.com",
+                                    "ishtml": true,
+                                    "subject": "Light Candles",
+                                    "text": "<p>Hi Lucy, light the candles</p>",
+                                    "to": "lucyemail@test.com"
+                                },
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['sendgrid_1']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/v3/mail/send"
+                            }
+                        },
+                        "Send_email_4_-_deliver_to_mum_and_dad": {
+                            "runAfter": {
+                                "Delay_until_0835": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "body": {
+                                    "from": "fromemail@test.com",
+                                    "ishtml": true,
+                                    "subject": "Deliver coffee to Mom and Dad",
+                                    "text": "<p>Hey, deliver the coffee to Mom and Dad</p>",
+                                    "to": "lucyemail@test.com"
+                                },
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['sendgrid_1']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/v3/mail/send"
+                            }
+                        },
+                        "Send_email_5_-_two_more_cups": {
+                            "runAfter": {
+                                "Delay_until_0839": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "body": {
+                                    "from": "fromemail@test.com",
+                                    "ishtml": true,
+                                    "subject": "Two more cups",
+                                    "text": "<p>Hey Lucy, return to kitchen and fill two more cups</p>",
+                                    "to": "lucyemail@test.com"
+                                },
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['sendgrid_1']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/v3/mail/send"
+                            }
+                        },
+                        "Send_email_6_-_relight": {
+                            "runAfter": {
+                                "Delay_until_0840": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "body": {
+                                    "from": "fromemail@test.com",
+                                    "ishtml": true,
+                                    "subject": "Relight the candles",
+                                    "text": "<p>Hey, relight the candles</p>",
+                                    "to": "lucyemail@test.com"
+                                },
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['sendgrid_1']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/v3/mail/send"
+                            }
+                        },
+                        "Send_email_7_-_sister_and_brother": {
+                            "runAfter": {
+                                "Delay_until_0845": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "body": {
+                                    "from": "fromemail@test.com",
+                                    "ishtml": true,
+                                    "subject": "Deliver coffee to sister and brother",
+                                    "text": "<p>Hey Lucy, deliver the coffee to your sister and brother</p>",
+                                    "to": "lucyemail@test.com"
+                                },
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['sendgrid_1']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/v3/mail/send"
+                            }
+                        },
+                        "Send_email_8_-_return_to_kitchen": {
+                            "runAfter": {
+                                "Delay_until_0849": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "body": {
+                                    "from": "fromemail@test.com",
+                                    "ishtml": true,
+                                    "subject": "Return to kitchen",
+                                    "text": "<p>Hey Lucy, return to kitchen, take a break!</p>",
+                                    "to": "lucyemail@test.com"
+                                },
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['sendgrid_1']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/v3/mail/send"
+                            }
+                        }
+                    },
+                    "outputs": {}
+                },
+                "parameters": {
+                    "$connections": {
+                        "value": {
+                            "sendgrid": {
+                                "connectionId": "[parameters('connections_sendgrid_1_externalid')]",
+                                "connectionName": "sendgrid",
+                                "id": "/subscriptions/.../providers/Microsoft.Web/locations/northeurope/managedApis/sendgrid"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
